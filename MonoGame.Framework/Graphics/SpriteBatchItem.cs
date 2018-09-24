@@ -47,6 +47,32 @@ namespace Microsoft.Xna.Framework.Graphics
             vertexBR.TextureCoordinate.Y = texCoordBR.Y;
         }
 
+        public void Set(Vector3[] positions, Color color, Vector2 texCoordTL, Vector2 texCoordBR)
+        {
+            if (positions.Length != 4)
+                throw new ArgumentException("The number of positions must be 4", nameof(positions));
+
+            vertexTL.Position = positions[0];
+            vertexTL.Color = color;
+            vertexTL.TextureCoordinate.X = texCoordTL.X;
+            vertexTL.TextureCoordinate.Y = texCoordTL.Y;
+
+            vertexTR.Position = positions[1];
+            vertexTR.Color = color;
+            vertexTR.TextureCoordinate.X = texCoordBR.X;
+            vertexTR.TextureCoordinate.Y = texCoordTL.Y;
+
+            vertexBL.Position = positions[2];
+            vertexBL.Color = color;
+            vertexBL.TextureCoordinate.X = texCoordTL.X;
+            vertexBL.TextureCoordinate.Y = texCoordBR.Y;
+
+            vertexBR.Position = positions[3];
+            vertexBR.Color = color;
+            vertexBR.TextureCoordinate.X = texCoordBR.X;
+            vertexBR.TextureCoordinate.Y = texCoordBR.Y;
+        }
+
         public void Set(Vector3 posTL, Vector3 posTR, Vector3 posBL, Vector3 posBR, Color color,
             Vector2 texCoordTL, Vector2 texCoordBR)
         {
