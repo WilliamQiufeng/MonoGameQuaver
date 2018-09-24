@@ -140,7 +140,7 @@ namespace Microsoft.Xna.Framework
                         char character = (char)ev.Key.Keysym.Sym;
                         _view.OnKeyDown(new InputKeyEventArgs(key));
                         if (char.IsControl(character))
-                            _view.OnTextInput(new TextInputEventArgs(character, key));
+                            _view.OnTextInput(this, new TextInputEventArgs(character, key));
                         break;
                     }
                     case Sdl.EventType.KeyUp:
@@ -195,7 +195,7 @@ namespace Microsoft.Xna.Framework
 
                                         if (codepoint >= 0 && codepoint < 0xFFFF)
                                         {
-                                            _view.OnTextInput(new TextInputEventArgs((char)codepoint, KeyboardUtil.ToXna(codepoint)));
+                                            _view.OnTextInput(this, new TextInputEventArgs((char)codepoint, KeyboardUtil.ToXna(codepoint)));
                                             // UTF16 characters beyond 0xFFFF are not supported (and would require a surrogate encoding that is not supported by the char type)
                                         }
                                     }
@@ -204,6 +204,9 @@ namespace Microsoft.Xna.Framework
                                 }
                             }
                         }
+                        break;
+                    case Sdl.EventType.DropFile:
+                        _view.CallFileDrop(Sdl.GetString(ev.Drop.File));
                         break;
                     case Sdl.EventType.WindowEvent:
 
