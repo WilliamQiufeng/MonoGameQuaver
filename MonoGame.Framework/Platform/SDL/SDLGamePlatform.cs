@@ -150,6 +150,34 @@ namespace Microsoft.Xna.Framework
                         _view.OnKeyUp(new InputKeyEventArgs(key));
                         break;
                     }
+                    case Sdl.EventType.MouseButtonup: 
+                    case Sdl.EventType.MouseButtonDown:
+                        switch ((Sdl.Mouse.Button) ev.Button.Button)
+                        {
+                            case Sdl.Mouse.Button.Left:
+                                Window.MouseState.LeftButton = ev.Button.State != 0 ? ButtonState.Pressed : ButtonState.Released;
+                                break;
+
+                            case Sdl.Mouse.Button.Right:
+                                Window.MouseState.RightButton = ev.Button.State != 0 ? ButtonState.Pressed : ButtonState.Released;
+                                break;
+
+                            case Sdl.Mouse.Button.Middle:
+                                Window.MouseState.MiddleButton = ev.Button.State != 0 ? ButtonState.Pressed : ButtonState.Released;
+                                break;
+
+                            case Sdl.Mouse.Button.X1:
+                                Window.MouseState.XButton1 = ev.Button.State != 0 ? ButtonState.Pressed : ButtonState.Released;
+                                break;
+
+                            case Sdl.Mouse.Button.X2:
+                                Window.MouseState.XButton2 = ev.Button.State != 0 ? ButtonState.Pressed : ButtonState.Released;
+                                break;
+
+                            default:
+                                break;
+                        }
+                        break;
                     case Sdl.EventType.TextInput:
                         if (_view.IsTextInputHandled)
                         {
