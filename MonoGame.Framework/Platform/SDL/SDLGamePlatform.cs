@@ -92,11 +92,20 @@ namespace Microsoft.Xna.Framework
             _dropList = new List<string>();
 
             Sdl.Init((int)(
-                Sdl.InitFlags.Video |
                 Sdl.InitFlags.Joystick |
                 Sdl.InitFlags.GameController |
                 Sdl.InitFlags.Haptic
             ));
+
+            if (game.PreferWayland)
+            {
+                if (Sdl.VideoInit("wayland") < 0)
+                    Sdl.VideoInit(null);
+            }
+            else
+            {
+                Sdl.VideoInit(null);
+            }
 
             Sdl.DisableScreenSaver();
 
@@ -462,6 +471,7 @@ namespace Microsoft.Xna.Framework
 
                 Joystick.CloseDevices();
 
+                Sdl.VideoQuit(); // Must be called manually when using Sdl.VideoInit.
                 Sdl.Quit();
             }
 
