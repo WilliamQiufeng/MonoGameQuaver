@@ -435,7 +435,8 @@ internal static class Sdl
             Android
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        // With the way we're using this, the size should be >= the real struct size.
+        [StructLayout(LayoutKind.Sequential, Size = 1024)]
         public struct SDL_SysWMinfo
         {
             public Version version;
