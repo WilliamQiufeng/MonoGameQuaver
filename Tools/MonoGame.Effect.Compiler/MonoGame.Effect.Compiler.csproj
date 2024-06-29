@@ -12,6 +12,8 @@
     <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
     <AssemblyName>mgfxc</AssemblyName>
     <UseAppHost>true</UseAppHost>
+    <AssemblyVersion>3.8.1.303</AssemblyVersion>
+    <FileVersion>3.8.1.303</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
