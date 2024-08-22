@@ -68,7 +68,13 @@ namespace Microsoft.Xna.Framework.Graphics
                 // Normal 3D cameras look into the -z direction (z = 1 is in front of z = 0). The
                 // sprite batch layer depth is the opposite (z = 0 is in front of z = 1).
                 // --> We get the correct matrix with near plane 0 and far plane -1.
-                Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0, -1, out _projection);
+                // var t = Matrix.CreateTranslation(-vp.Width / 2f, -vp.Height / 2f, -1);
+                var t = Matrix.CreateLookAt(new Vector3(vp.Width / 2f, vp.Height / 2f, -500),
+                    new Vector3(vp.Width / 2f, vp.Height / 2f, 0), Vector3.Down);
+                // var t = Matrix.Identity;
+                Matrix.CreateOrthographic(vp.Width, vp.Height, 500, 1000, out var b);
+                Matrix.Multiply(ref t, ref b, out _projection);
+                // Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0, -1000, out _projection);
 
                 if (GraphicsDevice.UseHalfPixelOffset)
                 {

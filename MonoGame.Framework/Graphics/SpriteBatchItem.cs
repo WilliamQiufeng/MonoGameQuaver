@@ -20,9 +20,57 @@ namespace Microsoft.Xna.Framework.Graphics
 			vertexTL = new VertexPositionColorTexture();
             vertexTR = new VertexPositionColorTexture();
             vertexBL = new VertexPositionColorTexture();
-            vertexBR = new VertexPositionColorTexture();            
+            vertexBR = new VertexPositionColorTexture();
 		}
-		
+
+        public void Set(Vector2 posTL, Vector2 posTR, Vector2 posBL, Vector2 posBR, Color color,
+            Vector2 texCoordTL, Vector2 texCoordBR, float depth )
+        {
+            vertexTL.Position = new Vector3(posTL, depth);
+            vertexTL.Color = color;
+            vertexTL.TextureCoordinate.X = texCoordTL.X;
+            vertexTL.TextureCoordinate.Y = texCoordTL.Y;
+
+            vertexTR.Position = new Vector3(posTR, depth);
+            vertexTR.Color = color;
+            vertexTR.TextureCoordinate.X = texCoordBR.X;
+            vertexTR.TextureCoordinate.Y = texCoordTL.Y;
+
+            vertexBL.Position = new Vector3(posBL, depth);
+            vertexBL.Color = color;
+            vertexBL.TextureCoordinate.X = texCoordTL.X;
+            vertexBL.TextureCoordinate.Y = texCoordBR.Y;
+
+            vertexBR.Position = new Vector3(posBR, depth);
+            vertexBR.Color = color;
+            vertexBR.TextureCoordinate.X = texCoordBR.X;
+            vertexBR.TextureCoordinate.Y = texCoordBR.Y;
+        }
+
+        public void Set(Vector3 posTL, Vector3 posTR, Vector3 posBL, Vector3 posBR, Color color,
+            Vector2 texCoordTL, Vector2 texCoordBR)
+        {
+            vertexTL.Position = posTL;
+            vertexTL.Color = color;
+            vertexTL.TextureCoordinate.X = texCoordTL.X;
+            vertexTL.TextureCoordinate.Y = texCoordTL.Y;
+
+            vertexTR.Position = posTR;
+            vertexTR.Color = color;
+            vertexTR.TextureCoordinate.X = texCoordBR.X;
+            vertexTR.TextureCoordinate.Y = texCoordTL.Y;
+
+            vertexBL.Position = posBL;
+            vertexBL.Color = color;
+            vertexBL.TextureCoordinate.X = texCoordTL.X;
+            vertexBL.TextureCoordinate.Y = texCoordBR.Y;
+
+            vertexBR.Position = posBR;
+            vertexBR.Color = color;
+            vertexBR.TextureCoordinate.X = texCoordBR.X;
+            vertexBR.TextureCoordinate.Y = texCoordBR.Y;
+        }
+
 		public void Set ( float x, float y, float dx, float dy, float w, float h, float sin, float cos, Color color, Vector2 texCoordTL, Vector2 texCoordBR, float depth )
 		{
             // TODO, Should we be just assigning the Depth Value to Z?
