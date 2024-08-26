@@ -91,6 +91,9 @@ namespace Microsoft.Xna.Framework.Graphics
         /// <param name="rasterizerState">State of the rasterization. Uses <see cref="RasterizerState.CullCounterClockwise"/> if null.</param>
         /// <param name="effect">A custom <see cref="Effect"/> to override the default sprite effect. Uses default sprite effect if null.</param>
         /// <param name="transformMatrix">An optional matrix used to transform the sprite geometry. Uses <see cref="Matrix.Identity"/> if null.</param>
+        /// <param name="projectionType">Projection method used for rendering the sprites</param>
+        /// <param name="fov">FOV of camera if using perspective projection</param>
+        /// <param name="zFar">The farthest Z value that will be rendered</param>
         /// <exception cref="InvalidOperationException">Thrown if <see cref="Begin"/> is called next time without previous <see cref="End"/>.</exception>
         /// <remarks>This method uses optional parameters.</remarks>
         /// <remarks>The <see cref="Begin"/> Begin should be called before drawing commands, and you cannot call it again before subsequent <see cref="End"/>.</remarks>
@@ -102,7 +105,10 @@ namespace Microsoft.Xna.Framework.Graphics
              DepthStencilState depthStencilState = null,
              RasterizerState rasterizerState = null,
              Effect effect = null,
-             Matrix? transformMatrix = null
+             Matrix? transformMatrix = null,
+             ProjectionType projectionType = ProjectionType.Orthographic,
+             float fov = MathF.PI / 2,
+             float zFar = 1000f
         )
         {
             if (_beginCalled)
@@ -116,6 +122,9 @@ namespace Microsoft.Xna.Framework.Graphics
             _rasterizerState = rasterizerState ?? RasterizerState.CullCounterClockwise;
             _effect = effect;
             _spriteEffect.TransformMatrix = transformMatrix;
+            _spriteEffect.ProjectionType = projectionType;
+            _spriteEffect.Fov = fov;
+            _spriteEffect.ZFar = zFar;
 
             // Setup things now so a user can change them.
             if (sortMode == SpriteSortMode.Immediate)

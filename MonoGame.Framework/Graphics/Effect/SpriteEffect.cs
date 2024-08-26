@@ -5,6 +5,8 @@
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 
+using System;
+
 namespace Microsoft.Xna.Framework.Graphics
 {
     /// <summary>
@@ -15,6 +17,49 @@ namespace Microsoft.Xna.Framework.Graphics
         private EffectParameter _matrixParam;
         private Viewport _lastViewport;
         private Matrix _projection;
+        private ProjectionType _projectionType = ProjectionType.Orthographic;
+        private float _fov = MathF.PI / 2.0f;
+        private float _zFar = 1000f;
+        private bool _dirty = true;
+
+        /// <summary>
+        ///     Type of projection used to render the sprites
+        /// </summary>
+        public ProjectionType ProjectionType
+        {
+            get => _projectionType;
+            set
+            {
+                _dirty |= _projectionType != value;
+                _projectionType = value;
+            }
+        }
+
+        /// <summary>
+        ///     If <see cref="ProjectionType"/> is <see cref="ProjectionType.Perspective"/>, the FOV used
+        /// </summary>
+        public float Fov
+        {
+            get => _fov;
+            set
+            {
+                _dirty |= _fov != value;
+                _fov = value;
+            }
+        }
+
+        /// <summary>
+        ///     The farthest Z value that will be rendered
+        /// </summary>
+        public float ZFar
+        {
+            get => _zFar;
+            set
+            {
+                _dirty |= _zFar != value;
+                _zFar = value;
+            }
+        }
 
         /// <summary>
         /// Creates a new SpriteEffect.
@@ -63,18 +108,26 @@ namespace Microsoft.Xna.Framework.Graphics
         protected internal override void OnApply()
         {
             var vp = GraphicsDevice.Viewport;
-            if ((vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height))
+            if (_dirty || (vp.Width != _lastViewport.Width) || (vp.Height != _lastViewport.Height))
             {
                 // Normal 3D cameras look into the -z direction (z = 1 is in front of z = 0). The
                 // sprite batch layer depth is the opposite (z = 0 is in front of z = 1).
                 // --> We get the correct matrix with near plane 0 and far plane -1.
-                // var t = Matrix.CreateTranslation(-vp.Width / 2f, -vp.Height / 2f, -1);
-                var t = Matrix.CreateLookAt(new Vector3(vp.Width / 2f, vp.Height / 2f, -500),
-                    new Vector3(vp.Width / 2f, vp.Height / 2f, 0), Vector3.Down);
-                // var t = Matrix.Identity;
-                Matrix.CreateOrthographic(vp.Width, vp.Height, 500, 1000, out var b);
-                Matrix.Multiply(ref t, ref b, out _projection);
-                // Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0, -1000, out _projection);
+                switch (_projectionType)
+                {
+                    case ProjectionType.Orthographic:
+                        Matrix.CreateOrthographicOffCenter(0, vp.Width, vp.Height, 0, 0, -_zFar, out _projection);
+                        break;
+                    case ProjectionType.Perspective:
+                        var zNear = vp.Width / MathF.Tan(_fov / 2) / 2;
+                        var t = Matrix.CreateLookAt(new Vector3(vp.Width / 2f, vp.Height / 2f, -zNear),
+                            new Vector3(vp.Width / 2f, vp.Height / 2f, 0), Vector3.Down);
+                        Matrix.CreatePerspective(vp.Width, vp.Height, zNear, zNear + _zFar, out var b);
+                        Matrix.Multiply(ref t, ref b, out _projection);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
                 if (GraphicsDevice.UseHalfPixelOffset)
                 {
@@ -83,6 +136,7 @@ namespace Microsoft.Xna.Framework.Graphics
                 }
 
                 _lastViewport = vp;
+                _dirty = false;
             }
 
             if (TransformMatrix.HasValue)
